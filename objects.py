@@ -12,7 +12,14 @@ class Object():
 		self.updateVal = updateVal	# how often frames of object are updated
 		for no, frame in enumerate(frames):
 			self.animFrames[no] = pygame.image.load(frame)
-		self.count = RangeIterator(len(self.animFrames) - 1)
+		self.counter = RangeIterator(len(self.animFrames) - 1)
+
+
+	def update(self):
+		self.counter.inc()
+		self.currentFrame = self.animFrames[self.counter.get()]
+		self.mask = pygame.mask.from_surface(self.currentFrame)
+		self.xPos -= self.speed
 
 
 

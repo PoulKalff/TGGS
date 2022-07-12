@@ -6,7 +6,7 @@ class Background():
 
 	def __init__(self, parent, levelData, xPos):
 		self.parent = parent
-		self.tile = pygame.image.load(levelData['tilePath'])
+		self.foreground = pygame.image.load(levelData['fgPath'])
 		self.layer = pygame.image.load(levelData['layerPath'])
 		self.background = pygame.image.load(levelData['bgPath'])
 		self.layerDim = self.layer.get_size()
@@ -28,8 +28,8 @@ class Background():
 
 
 	def draw(self):
-		self.parent.display.blit(self.background, (0, 0))
-		self.parent.display.blit(self.layer, (self.xPosBackground, 0))
-		for t in range(-80, 1360, 80):
-			self.parent.display.blit(self.tile, (t + 10 * self.pavementOffset.get() , self.parent.height - 80))
+		self.parent.renderList.append(renderObject(self.background, (0, 0), 1, 'level background'))
+		self.parent.renderList.append(renderObject(self.layer, (self.xPosBackground, 0), 2, 'level layer'))
+		self.parent.renderList.append(renderObject(self.foreground, (-80 + (10 * self.pavementOffset.get()) , self.parent.height - 80), 3, 'level foreground'))
 
+# 		for t in range(-80, 1360, 80):

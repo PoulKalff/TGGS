@@ -17,6 +17,17 @@ class colorList:
 
 
 
+class renderObject():
+	""" An object to be rendered """
+
+	def __init__(self, frame, coord, pri, descr='None'):
+		self.frame = frame
+		self.coordinate = coord
+		self.priority = pri
+		self.description = descr
+
+
+
 class FlipSwitch():
 	""" Represents a switch with on and off-state """
 

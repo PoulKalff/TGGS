@@ -15,6 +15,7 @@ class Player():
 		self.goingUp = False
 		self.kneeling = False
 		self.death = 0
+		self.changetime = 0
 		self.standFrame = pygame.image.load('gfx/animRun/standing.png')
 		self.kneelFrame = pygame.image.load('gfx/animRun/kneeling.png')
 		self.kneelHeadFrame = pygame.image.load('gfx/animHead/kneeling.png')
@@ -22,9 +23,10 @@ class Player():
 		self.runFrames = {nr : pygame.image.load('gfx/animRun/' + str(nr + 1) + '.png') for nr in range(20)}
 		self.headFrames = {nr : pygame.image.load('gfx/animHead/' + str(nr + 1) + '.png') for nr in range(8)}
 		self.headDeath  = {0 : pygame.image.load('gfx/animHead/death1.png'), 1 : pygame.image.load('gfx/animHead/death2.png'), 2 : pygame.image.load('gfx/animHead/death1.png')}
-		self.deathScreen = pygame.image.load('gfx/deathScreen.png')
-		self.frameNo = RangeIterator(19)
-		self.currentBody = self.runFrames[self.frameNo.get()]
+		self.deathScreens = [pygame.image.load('gfx/deathScreen1.png'), pygame.image.load('gfx/deathScreen2.png')]
+		self.bodyFrameNo = RangeIterator(19)
+		self.headFrameNo = RangeIterator(3)
+		self.currentBody = self.runFrames[self.bodyFrameNo.get()]
 		self.currentHead = self.headFrames[0]
 		y, x  = pygame.display.get_surface().get_size()
 		self.size = self.runFrames[1].get_rect().size
@@ -51,14 +53,21 @@ class Player():
 						[[0, 5], [25, 38], [50, 91], [75, 176], [87, 312], [100, 529], [112, 846], [125, 1000], [137, 1000], [132, 1000], [122, 1000]] ,
 						[[0, 38], [32, 91], [65, 176], [97, 312], [113, 529], [130, 846], [145, 1000], [162, 1000], [178, 1000], [171, 1000], [158, 1000]] 
 					]
-		if self.parent.ticks % 6:
+		if pygame.time.get_ticks() % 6:
 			time.sleep(0.05)
 		if self.death == 11:
 			""" Show screen while delaying """
 			time.sleep(1)
-			self.parent.display.blit(self.deathScreen , (0, 0))
+			self.parent.display.blit(self.deathScreens[0] , (0, 0))
 			pygame.display.update()
-			time.sleep(3)
+			time.sleep(2)
+
+
+			self.parent.display.blit(self.deathScreens[1] , (0, 0))
+			pygame.display.update()
+			time.sleep(2)
+
+
 			self.parent.initGame()
 		for head in range(6):
 		#	head = 0
@@ -70,22 +79,31 @@ class Player():
 
 
 	def update(self):
-		if self.stationary and self.parent.ticks > self.stationary + 4:
-			frame = self.parent.ticks % 4 if self.movement.isMoving() else self.parent.ticks % 8
-		else:
-			frame = self.parent.ticks % 4
 		self.calculateJump()
 		self.changeBody()
-		self.changeHead(frame)
-		if not self.movement.isMoving():
+		self.changeHead()
+		self.bodyMask = pygame.mask.from_surface(self.currentBody)
+		self.headMask = pygame.mask.from_surface(self.currentHead)
+		if pygame.time.get_ticks() - self.changetime >= 1000:	# change head every second
+			self.headFrameNo.inc()
+			self.changetime = pygame.time.get_ticks()
+		if self.movement.isMoving():
+			self.stationary = 0
+		else:
+			self.stationary += 1
 			self.stop()
+		if self.death:
+			self.showDeath(self.xPos, self.yPos)
+		else:
+			self.parent.renderList.append(renderObject(self.currentBody, (self.xPos, self.yPos), 5, 'player body'))
+			self.parent.renderList.append(renderObject(self.currentHead, self.getHeadCoord(), 5, 'player head'))
 
 
 
 	def changeBody(self):
 		if self.onGround():
 			if self.movement.left or self.movement.right:
-				self.currentBody = self.runFrames[self.frameNo.get()]
+				self.currentBody = self.runFrames[self.bodyFrameNo.get()]
 			else:
 				self.currentBody = self.kneelFrame if self.kneeling else self.standFrame
 		elif self.goingUp:
@@ -97,8 +115,9 @@ class Player():
 
 
 
-	def changeHead(self, frame):
-		self.currentHead = self.kneelHeadFrame if self.kneeling else self.headFrames[frame]
+	def changeHead(self):
+		value = 0 if self.stationary < 50 else 4	# added to use headFrame 4 - 8, if player is idle
+		self.currentHead = self.kneelHeadFrame if self.kneeling else self.headFrames[self.headFrameNo.get() + value]
 		if not self.vector:
 			self.currentHead = pygame.transform.flip(self.currentHead, True, False)
 
@@ -117,7 +136,7 @@ class Player():
 
 
 	def move(self, speed):
-		self.frameNo.inc()
+		self.bodyFrameNo.inc()
 		self.kneeling = False
 		self.movement.verticalMove(speed > 0)
 		if speed != 0:
@@ -126,10 +145,8 @@ class Player():
 
 
 	def stop(self):
-		self.frameNo.current = 0
-		self.stationary = self.parent.ticks
+		self.bodyFrameNo.current = 0
 		self.movement.stop()
-		self.idle = self.parent.ticks
 
 
 	def getHeadCoord(self):
@@ -141,11 +158,4 @@ class Player():
 			y = self.yPos - 30
 		return (x,y)
 
-
-	def draw(self):
-		if self.death:
-			self.showDeath(self.xPos, self.yPos)
-		else:
-			self.parent.display.blit(self.currentBody, (self.xPos, self.yPos) )
-			self.parent.display.blit(self.currentHead, self.getHeadCoord() )
 

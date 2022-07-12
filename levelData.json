@@ -25,7 +25,7 @@
 			],
 			"bgPath" : "gfx/level1backdrop.png",
 			"layerPath" : "gfx/level1layer.png",
-			"tilePath" : "gfx/pavement.png",
+			"fgPath" : "gfx/pavement.png",
 			"endScreen" : "gfx/level1Completed.png"
 		},
 		"2":{

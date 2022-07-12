@@ -38,18 +38,14 @@ class Main():
 	""" get data from API and display it """
 
 	def __init__(self):
-		self.ticks = 0 
 		self.width = 1280
 		self.height = 720
 		self.time_down = 0.0
 		self.time_elapsed = 0.0
 		pygame.init()
-		self.gameTimer = pygame.time.Clock
-		self.tickEvent = pygame.USEREVENT + 0
-		self.jumpEvent = pygame.USEREVENT + 1
-		pygame.time.set_timer(self.tickEvent, 1000)			# register a event to count ticks, to align game to
 		pygame.display.set_caption('The Great Greendale Sisters')
 		self.display = pygame.display.set_mode((self.width, self.height))
+		self.renderList = []				# list of all objects to render for each frame
 
 
 	def run(self):
@@ -64,11 +60,23 @@ class Main():
 		self.level.xPosition = self.player.xPos
 
 
-	def showProgressBar(self):
+	def createProgressBar(self):
 		percentage = (self.level.xPos + self.player.xPos) / (self.width + self.level.xPosMax)
 		barWidth = self.width - 200
-		pygame.draw.rect(self.display, (70, 180, 50), (100, 30, barWidth, 20))	# bar
-		pygame.draw.rect(self.display, (0, 0, 0),     (100 + (barWidth * percentage), 30, 2, 20))	# player location
+
+		pbSurface  = pygame.Surface((self.width - 198, 22))
+
+
+		pygame.draw.rect(pbSurface, (70, 180, 50), (1, 1, barWidth, 20))	# bar
+		pygame.draw.rect(pbSurface, (0, 0, 0),     (1 + (barWidth * percentage), 1, 2, 20))	# player location
+
+		self.renderList.append(renderObject(pbSurface, (100, 30), 10, 'ProgressBar'))
+
+
+
+#		pygame.draw.rect(pbSurface, (70, 180, 50), (100, 30, barWidth, 20))	# bar
+#		pygame.draw.rect(pbSurface, (0, 0, 0),     (100 + (barWidth * percentage), 30, 2, 20))	# player location
+
 
 
 
@@ -83,7 +91,8 @@ class Main():
 					if self.player.yPos == self.player.yPosLevel:
 						self.player.goingUp = True
 				elif event.key == pygame.K_DOWN:
-					self.player.kneeling = True
+					if self.player.onGround():
+						self.player.kneeling = True
 			# --- Key Up Events -----------------------------------------------
 			elif event.type == pygame.KEYUP:
 				if event.key == pygame.K_ESCAPE:
@@ -96,9 +105,6 @@ class Main():
 					self.running = False
 				elif event.key == pygame.K_SPACE:
 					pass
-			elif event.type == self.tickEvent:
-				self.ticks += 1
-				if self.ticks > 60: self.ticks = 0
 		keysPressed = pygame.key.get_pressed()
 		# --- FOR DEV ------------------------------------------------------
 		if keysPressed[pygame.K_d]:
@@ -140,24 +146,61 @@ class Main():
 
 	def checkCollision(self):
 		""" check if player's gfx overlaps any enemy's gfx """
-		bX, bY = self.player.currentBody.get_rect().size
-		hX, hY = self.player.currentHead.get_rect().size
+	#	playerBodyMask = pygame.mask.from_surface(self.player.currentBody)
+	#	playerHeadMask = pygame.mask.from_surface(self.player.currentHead)
+		# bX, bY = self.player.currentBody.get_rect().size
+		# hX, hY = self.player.currentHead.get_rect().size
 		xPosHead, yPosHead = self.player.getHeadCoord()
-		bodyRect = pygame.Rect(self.player.xPos, self.player.yPos, bX, bY) 
-		headRect = pygame.Rect(xPosHead, yPosHead, hX, hY) 
+		# bodyRect = pygame.Rect(self.player.xPos, self.player.yPos, bX, bY) 
+		# headRect = pygame.Rect(xPosHead, yPosHead, hX, hY) 
 		# --- FOR DEV ----------------------------------------------------------
-		pygame.draw.rect(self.display, (0,255,0), bodyRect, 1)			# draw GREEN body collision rect
-		pygame.draw.rect(self.display, (255,0,0), headRect, 1)		# draw RED head collision rect
+#		pygame.draw.rect(self.display, (0,255,0), bodyRect, 1)		# draw GREEN body collision rect
+#		pygame.draw.rect(self.display, (255,0,0), headRect, 1)		# draw RED head collision rect
 		# --- FOR DEV ----------------------------------------------------------
 		for obj in self.level.visibleObjects:
-			objSize = obj.animFrames[obj.count.get()].get_rect().size
-			objRect = pygame.Rect(self.width - (self.level.xPos + self.width - obj.xPos), obj.yPos, *objSize)
+			offset1 = (self.player.xPos - obj.xPos, self.player.yPos - obj.yPos)
+
+
+			offset2 = (xPosHead - obj.xPos, yPosHead - obj.yPos)
+			overlap1 = self.player.headMask.overlap(obj.mask, offset1)
+			overlap2 = self.player.bodyMask.overlap(obj.mask, offset2)
+
+
+			mask1 = self.player.bodyMask
+			mask2 = obj.mask
+
+
+		#	print(mask1.overlap(mask2, offset1), offset1)
+
+
+
+#			print(	playerBodyMask.overlap(objectMask, offset)	)
+#			overlap_mask = playerBodyMask.overlap_mask(objectMask, (self.player.xPos, self.player.yPos))
+#			overlap_surf = overlap_mask.to_surface(setcolor = (255, 255, 0))
+#			overlap_surf.set_colorkey((0, 0, 0))
+#			self.display.blit(overlap_surf, bodyRect)
+#			pygame.display.flip()
+
+
+
+
+
+#			objSize = obj.animFrames[obj.count.get()].get_rect().size
+#			objRect = pygame.Rect(self.width - (self.level.xPos + self.width - obj.xPos), obj.yPos, *objSize)
 			# --- FOR DEV ----------------------------------------------------------
-			pygame.draw.rect(self.display, (0,0,255), objRect, 1)			# draw BLUE body collision rect
+#			pygame.draw.rect(self.display, (0,0,255), objRect, 1)			# draw BLUE body collision rect
 			# print(bodyRect, objRect, pygame.Rect.colliderect(bodyRect, objRect))
 			# --- FOR DEV ----------------------------------------------------------
-			if pygame.Rect.colliderect(bodyRect, objRect) or pygame.Rect.colliderect(headRect, objRect):
-				self.player.death = 1
+#			if pygame.Rect.colliderect(bodyRect, objRect) or pygame.Rect.colliderect(headRect, objRect):
+#				print('RECT overlap!')
+
+
+
+	#		if objectMask.overlap(playerBodyMask, (self.player.xPos, self.player.yPos) ):
+	#			self.player.death = 1
+
+
+
 		return 1
 
 
@@ -169,12 +212,17 @@ class Main():
 			self.checkInput()
 			self.level.update()
 			self.player.update()
-			self.player.draw()
-			self.showProgressBar()
+			self.createProgressBar()
 			if not self.player.death:
 				self.checkCollision()
+			for obj in self.renderList:
+				self.display.blit(obj.frame, obj.coordinate)
 			pygame.display.update()
-	#		self.player.movement.show()
+			self.renderList = []
+
+
+
+
 		pygame.quit()
 		print('  Game terminated gracefully\n')
 
@@ -194,11 +242,9 @@ obj.run()
 
 
 # --- TODO ---------------------------------------------------------------------------------------
-# - enemies move more advanced, eg jump, move back/forth, change speed
-# - vaaben/skud?
-# - use build-in ticks i stedet for self.ticks
-# - noget mindre hidsig collision detection... mindre rect inden i playe rect?
-
+# - IDE : enemies move more advanced, eg jump, move back/forth, change speed
+# - IDE : vaaben/skud?
+# - mask based collision detection
 
 
 # --- NOTES --------------------------------------------------------------------------------------
