@@ -5,23 +5,26 @@
 			"levelNo" : 1,
 			"length" : 9000,
 			"objects" : [
-				[1500, 580, 10, 6, ["gfx/bil1.png", "gfx/bil2.png"]],
-				[2500, 580, 10, 6, ["gfx/bil1.png", "gfx/bil2.png"]],
-				[3000, 400, 20, 6, ["gfx/sword1.png", "gfx/sword2.png"]],
-				[3500, 580, 10, 6, ["gfx/bil1.png", "gfx/bil2.png"]],
-				[4000, 600, 15, 6, ["gfx/dog1.png", "gfx/dog2.png"]],
-				[4200, 400, 20, 6, ["gfx/sword1.png", "gfx/sword2.png"]],
-				[4500, 580, 15, 6, ["gfx/dog1.png", "gfx/dog2.png"]],
-				[4800, 590, 5, 6, ["gfx/snail1.png", "gfx/snail2.png", "gfx/snail3.png"]],
-				[5000, 580, 10, 6, ["gfx/bil1.png", "gfx/bil2.png"]],
-				[5200, 400, 20, 6, ["gfx/sword1.png", "gfx/sword2.png"]],
-				[5500, 580, 5, 6, ["gfx/snail1.png", "gfx/snail2.png"]],
-				[6500, 580, 10, 6, ["gfx/bil1.png", "gfx/bil2.png"]],
-				[7000, 400, 20, 6, ["gfx/sword1.png", "gfx/sword2.png"]],
-				[7500, 580, 10, 6, ["gfx/bil1.png", "gfx/bil2.png"]],
-				[8000, 580, 15, 6, ["gfx/dog1.png", "gfx/dog2.png"]],
-				[8500, 310, 1, 6, ["gfx/aardvark1.png", "gfx/aardvark2.png"]],
-				[10210, 376, 0, 3, ["gfx/portal1.png", "gfx/portal2.png"]]
+				[1500,  580, 10, 20, ["gfx/bil1.png", "gfx/bil2.png"]],
+				[2500,  580, 10, 20, ["gfx/bil1.png", "gfx/bil2.png"]],
+				[3000,  400, 20, 20, ["gfx/sword1.png", "gfx/sword2.png"]],
+				[3500,  580, 10, 20, ["gfx/bil1.png", "gfx/bil2.png"]],
+				[4000,  600, 15, 20, ["gfx/dog1.png", "gfx/dog2.png"]],
+				[4300,  400, 20, 20, ["gfx/sword1.png", "gfx/sword2.png"]],
+				[4800,  590, 5,  20, ["gfx/snail1.png", "gfx/snail2.png", "gfx/snail3.png"]],
+				[5000,  580, 10, 20, ["gfx/bil1.png", "gfx/bil2.png"]],
+				[5500,  580, 5,  20, ["gfx/snail1.png", "gfx/snail2.png"]],
+				[6500,  580, 10, 20, ["gfx/bil1.png", "gfx/bil2.png"]],
+				[7500,  580, 10, 20, ["gfx/bil1.png", "gfx/bil2.png"]],
+				[8000,  580, 15, 20, ["gfx/dog1.png", "gfx/dog2.png"]],
+				[8500,  310, 1,  20, ["gfx/aardvark1.png", "gfx/aardvark2.png"]],
+
+
+				[1000,  534, 0,  10, ["gfx/mushroomLower.png"], 0],
+				[945,   484, 0,  10, ["gfx/mushroomUpper.png"], 0],
+
+
+				[10210, 376, 0,  10, ["gfx/portal1.png", "gfx/portal2.png"]]
 			],
 			"bgPath" : "gfx/level1backdrop.png",
 			"layerPath" : "gfx/level1layer.png",

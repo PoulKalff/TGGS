@@ -42,8 +42,9 @@ class Main():
 		self.height = 720
 		self.time_down = 0.0
 		self.time_elapsed = 0.0
+		self.develop = False
 		pygame.init()
-		pygame.display.set_caption('The Great Greendale Sisters')
+		pygame.display.set_caption('The Smulle Game')
 		self.display = pygame.display.set_mode((self.width, self.height))
 		self.renderList = []				# list of all objects to render for each frame
 
@@ -58,26 +59,6 @@ class Main():
 		self.player = Player(self)
 		self.level = Level(self, 1)
 		self.level.xPosition = self.player.xPos
-
-
-	def createProgressBar(self):
-		percentage = (self.level.xPos + self.player.xPos) / (self.width + self.level.xPosMax)
-		barWidth = self.width - 200
-
-		pbSurface  = pygame.Surface((self.width - 198, 22))
-
-
-		pygame.draw.rect(pbSurface, (70, 180, 50), (1, 1, barWidth, 20))	# bar
-		pygame.draw.rect(pbSurface, (0, 0, 0),     (1 + (barWidth * percentage), 1, 2, 20))	# player location
-
-		self.renderList.append(renderObject(pbSurface, (100, 30), 10, 'ProgressBar'))
-
-
-
-#		pygame.draw.rect(pbSurface, (70, 180, 50), (100, 30, barWidth, 20))	# bar
-#		pygame.draw.rect(pbSurface, (0, 0, 0),     (100 + (barWidth * percentage), 30, 2, 20))	# player location
-
-
 
 
 	def checkInput(self):
@@ -107,8 +88,13 @@ class Main():
 					pass
 		keysPressed = pygame.key.get_pressed()
 		# --- FOR DEV ------------------------------------------------------
-		if keysPressed[pygame.K_d]:
+		if keysPressed[pygame.K_k]:					# kill player
 			self.player.death = 1
+		if keysPressed[pygame.K_d]:					# developer mode, disables collision
+			self.develop = True
+		if keysPressed[pygame.K_s]:					# stop all objects
+			for o in self.level.visibleObjects:
+				o.speed = 0
 		# --- FOR DEV ------------------------------------------------------
 		elif keysPressed[pygame.K_LEFT]:
 			# move player
@@ -146,61 +132,18 @@ class Main():
 
 	def checkCollision(self):
 		""" check if player's gfx overlaps any enemy's gfx """
-	#	playerBodyMask = pygame.mask.from_surface(self.player.currentBody)
-	#	playerHeadMask = pygame.mask.from_surface(self.player.currentHead)
-		# bX, bY = self.player.currentBody.get_rect().size
-		# hX, hY = self.player.currentHead.get_rect().size
+		if self.player.death or self.develop:
+			return 0
 		xPosHead, yPosHead = self.player.getHeadCoord()
-		# bodyRect = pygame.Rect(self.player.xPos, self.player.yPos, bX, bY) 
-		# headRect = pygame.Rect(xPosHead, yPosHead, hX, hY) 
-		# --- FOR DEV ----------------------------------------------------------
-#		pygame.draw.rect(self.display, (0,255,0), bodyRect, 1)		# draw GREEN body collision rect
-#		pygame.draw.rect(self.display, (255,0,0), headRect, 1)		# draw RED head collision rect
-		# --- FOR DEV ----------------------------------------------------------
 		for obj in self.level.visibleObjects:
-			offset1 = (self.player.xPos - obj.xPos, self.player.yPos - obj.yPos)
-
-
-			offset2 = (xPosHead - obj.xPos, yPosHead - obj.yPos)
-			overlap1 = self.player.headMask.overlap(obj.mask, offset1)
-			overlap2 = self.player.bodyMask.overlap(obj.mask, offset2)
-
-
-			mask1 = self.player.bodyMask
-			mask2 = obj.mask
-
-
-		#	print(mask1.overlap(mask2, offset1), offset1)
-
-
-
-#			print(	playerBodyMask.overlap(objectMask, offset)	)
-#			overlap_mask = playerBodyMask.overlap_mask(objectMask, (self.player.xPos, self.player.yPos))
-#			overlap_surf = overlap_mask.to_surface(setcolor = (255, 255, 0))
-#			overlap_surf.set_colorkey((0, 0, 0))
-#			self.display.blit(overlap_surf, bodyRect)
-#			pygame.display.flip()
-
-
-
-
-
-#			objSize = obj.animFrames[obj.count.get()].get_rect().size
-#			objRect = pygame.Rect(self.width - (self.level.xPos + self.width - obj.xPos), obj.yPos, *objSize)
-			# --- FOR DEV ----------------------------------------------------------
-#			pygame.draw.rect(self.display, (0,0,255), objRect, 1)			# draw BLUE body collision rect
-			# print(bodyRect, objRect, pygame.Rect.colliderect(bodyRect, objRect))
-			# --- FOR DEV ----------------------------------------------------------
-#			if pygame.Rect.colliderect(bodyRect, objRect) or pygame.Rect.colliderect(headRect, objRect):
-#				print('RECT overlap!')
-
-
-
-	#		if objectMask.overlap(playerBodyMask, (self.player.xPos, self.player.yPos) ):
-	#			self.player.death = 1
-
-
-
+			if obj.collisionType:
+				objXPos = self.width - (self.level.xPos + self.width - obj.xPos)		# calculate obj posistion on screen, obj.xPos is position on level
+				offset1 = (objXPos - self.player.xPos, obj.yPos - self.player.yPos)		# body
+				offset2 = (objXPos - xPosHead, obj.yPos - yPosHead)						# head
+				overlap1 = self.player.bodyMask.overlap(obj.mask, offset1)
+				overlap2 = self.player.headMask.overlap(obj.mask, offset2)
+				if overlap1 or overlap2:
+					self.player.death = 1
 		return 1
 
 
@@ -212,19 +155,14 @@ class Main():
 			self.checkInput()
 			self.level.update()
 			self.player.update()
-			self.createProgressBar()
-			if not self.player.death:
-				self.checkCollision()
+			self.checkCollision()
+			self.renderList.sort(key=lambda x: x.priority)
 			for obj in self.renderList:
 				self.display.blit(obj.frame, obj.coordinate)
 			pygame.display.update()
 			self.renderList = []
-
-
-
-
 		pygame.quit()
-		print('  Game terminated gracefully\n')
+		print('\n  Game terminated gracefully')
 
 
 # --- Main  ---------------------------------------------------------------------------------------
@@ -242,9 +180,11 @@ obj.run()
 
 
 # --- TODO ---------------------------------------------------------------------------------------
-# - IDE : enemies move more advanced, eg jump, move back/forth, change speed
-# - IDE : vaaben/skud?
-# - mask based collision detection
+# - enemies move more advanced, eg jump, move back/forth, change speed
+# - vaaben/skud?
+# - sounds on objects
+
+# - ting man kan hoppe op på, eks. toadstool
 
 
 # --- NOTES --------------------------------------------------------------------------------------

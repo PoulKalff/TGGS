@@ -42,9 +42,8 @@ class Player():
 		return self.yPos == self.yPosLevel
 
 
-	def showDeath(self, xPos, yPos):
+	def showDeath(self):
 		""" paint 10 heads flying in different directions, from starting point """
-		yPos -= 20
 		posMatrix = [
 						[[0, 10], [2, -24], [-34, -39], [-59, -26], [8, 5], [10, 38], [12, 91], [16, 176], [20, 312], [25, 529], [30, 846]] ,
 						[[0, -24], [10, -39], [20, -26], [30, 5], [45, 38], [60, 91], [85, 176], [110, 312], [150, 529], [200, 846], [250, 1000]] ,
@@ -53,26 +52,19 @@ class Player():
 						[[0, 5], [25, 38], [50, 91], [75, 176], [87, 312], [100, 529], [112, 846], [125, 1000], [137, 1000], [132, 1000], [122, 1000]] ,
 						[[0, 38], [32, 91], [65, 176], [97, 312], [113, 529], [130, 846], [145, 1000], [162, 1000], [178, 1000], [171, 1000], [158, 1000]] 
 					]
-		if pygame.time.get_ticks() % 6:
-			time.sleep(0.05)
-		if self.death == 11:
-			""" Show screen while delaying """
-			time.sleep(1)
-			self.parent.display.blit(self.deathScreens[0] , (0, 0))
-			pygame.display.update()
-			time.sleep(2)
-
-
-			self.parent.display.blit(self.deathScreens[1] , (0, 0))
-			pygame.display.update()
-			time.sleep(2)
-
-
-			self.parent.initGame()
-		for head in range(6):
-		#	head = 0
-			self.parent.display.blit(self.headDeath[random.randint(0,2)], (xPos + posMatrix[head][self.death - 1][0], yPos + posMatrix[head][self.death - 1][1]) )
-			self.parent.display.blit(self.headDeath[random.randint(0,2)], (xPos - posMatrix[head][self.death - 1][0], yPos + posMatrix[head][self.death - 1][1]) )
+		time.sleep(0.05)	# slow down animation. Should be locked to ticks!
+		if self.death < 12:
+			for head in range(6):
+				self.parent.renderList.append(renderObject(self.headDeath[random.randint(0,2)], (self.xPos + posMatrix[head][self.death - 1][0], self.yPos - 20 + posMatrix[head][self.death - 1][1]), 100, 'random death head right'))
+				self.parent.renderList.append(renderObject(self.headDeath[random.randint(0,2)], (self.xPos - posMatrix[head][self.death - 1][0], self.yPos - 20 + posMatrix[head][self.death - 1][1]), 100, 'random death head left'))
+		elif self.death < 20:	# pausing
+			pass
+		elif self.death < 45:
+				self.parent.renderList.append(renderObject(self.deathScreens[0] , (0, 0), 100, 'first Death-screen'))
+		elif self.death < 70:
+				self.parent.renderList.append(renderObject(self.deathScreens[1] , (0, 0), 100, 'second Death-screen'))
+		else:
+		 	self.parent.initGame()
 		self.death += 1
 		return 1
 
@@ -93,10 +85,10 @@ class Player():
 			self.stationary += 1
 			self.stop()
 		if self.death:
-			self.showDeath(self.xPos, self.yPos)
+			self.showDeath()
 		else:
-			self.parent.renderList.append(renderObject(self.currentBody, (self.xPos, self.yPos), 5, 'player body'))
-			self.parent.renderList.append(renderObject(self.currentHead, self.getHeadCoord(), 5, 'player head'))
+			self.parent.renderList.append(renderObject(self.currentBody, (self.xPos, self.yPos), 100, 'player body'))
+			self.parent.renderList.append(renderObject(self.currentHead, self.getHeadCoord(), 100, 'player head'))
 
 
 
