@@ -15,7 +15,7 @@ import requests
 import argparse
 import pygame.locals
 from io import BytesIO
-from PIL import Image
+#from PIL import Image
 
 from helperFunctions import *
 from player import Player
