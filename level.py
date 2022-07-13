@@ -34,6 +34,16 @@ class Level():
 
 
 
+	def createProgressBar(self):
+		percentage = (self.xPos + self.parent.player.xPos) / (self.parent.width + self.xPosMax)
+		barWidth = self.parent.width - 200
+		pbSurface  = pygame.Surface((self.parent.width - 198, 22))
+		pygame.draw.rect(pbSurface, (70, 180, 50), (1, 1, barWidth, 20))	# bar
+		pygame.draw.rect(pbSurface, (0, 0, 0),     (1 + (barWidth * percentage), 1, 2, 20))	# player location
+		self.parent.renderList.append(renderObject(pbSurface, (100, 30), 10, 'ProgressBar'))
+
+
+
 	def update(self):
 		self.background.draw()
 		self.visibleObjects = []
@@ -41,9 +51,10 @@ class Level():
 			if obj.xPos < self.xPos + self.parent.width + 100 and obj.xPos > self.xPos:
 				obj.update()
 				self.visibleObjects.append(obj)
-				self.parent.renderList.append(renderObject(obj.currentFrame, (self.parent.width - (self.xPos + self.parent.width - obj.xPos), obj.yPos), 100, 'an enemy'))
+				self.parent.renderList.append(renderObject(obj.currentFrame, (self.parent.width - (self.xPos + self.parent.width - obj.xPos), obj.yPos), obj.renderVal, 'an enemy' if obj.collisionType else 'an object'))
 				if obj.xPos <= self.xPos:			# if object has passed, remove it
 					obj.xPos = 0
+		self.createProgressBar()
 
 
 
