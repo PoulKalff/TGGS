@@ -26,8 +26,6 @@ from level import Level
 pygame.init()
 version = '0.20'		# player animation complete
 sounds = {}
-#backgroundMusic = pygame.mixer.Sound("snd/Mozart.-.Symphony.No.40.1st.Movement.mp3")
-#backgroundMusic.set_volume(0.03)
 font30 = pygame.font.Font('freesansbold.ttf', 30)
 font60 = pygame.font.Font('freesansbold.ttf', 60)
 
@@ -43,6 +41,8 @@ class Main():
 		self.time_down = 0.0
 		self.time_elapsed = 0.0
 		self.develop = False
+		self.backgroundMusic = pygame.mixer.Sound("sfx/level1_theme.mp3")
+		self.backgroundMusic.set_volume(0.1)
 		pygame.init()
 		pygame.display.set_caption('The Smulle Game')
 		self.display = pygame.display.set_mode((self.width, self.height))
@@ -56,6 +56,7 @@ class Main():
 
 	def initGame(self):
 		self.running = True
+		self.backgroundMusic.play()
 		self.player = Player(self)
 		self.level = Level(self, 1)
 		self.level.xPosition = self.player.xPos
@@ -180,9 +181,11 @@ obj.run()
 
 
 # --- TODO ---------------------------------------------------------------------------------------
+# - bedre respons fra kontrol, især NED
 # - enemies move more advanced, eg jump, move back/forth, change speed
 # - vaaben/skud?
-# - sounds on objects
+# - death sound
+# 	- 
 
 # - ting man kan hoppe op på, eks. toadstool
 

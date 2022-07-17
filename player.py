@@ -24,6 +24,8 @@ class Player():
 		self.headFrames = {nr : pygame.image.load('gfx/animHead/' + str(nr + 1) + '.png') for nr in range(8)}
 		self.headDeath  = {0 : pygame.image.load('gfx/animHead/death1.png'), 1 : pygame.image.load('gfx/animHead/death2.png'), 2 : pygame.image.load('gfx/animHead/death1.png')}
 		self.deathScreens = [pygame.image.load('gfx/deathScreen1.png'), pygame.image.load('gfx/deathScreen2.png')]
+		self.deathSounds = [pygame.mixer.Sound('sfx/death3.mp3'), pygame.mixer.Sound('sfx/death1.mp3'), pygame.mixer.Sound('sfx/death2.mp3'), pygame.mixer.Sound('sfx/death3.mp3'),
+							pygame.mixer.Sound('sfx/death2.mp3'), pygame.mixer.Sound('sfx/death1.mp3'), pygame.mixer.Sound('sfx/death2.mp3'), pygame.mixer.Sound('sfx/death3.mp3')]
 		self.bodyFrameNo = RangeIterator(19)
 		self.headFrameNo = RangeIterator(3)
 		self.currentBody = self.runFrames[self.bodyFrameNo.get()]
@@ -44,6 +46,7 @@ class Player():
 
 	def showDeath(self):
 		""" paint 10 heads flying in different directions, from starting point """
+		self.parent.backgroundMusic.stop()
 		posMatrix = [
 						[[0, 10], [2, -24], [-34, -39], [-59, -26], [8, 5], [10, 38], [12, 91], [16, 176], [20, 312], [25, 529], [30, 846]] ,
 						[[0, -24], [10, -39], [20, -26], [30, 5], [45, 38], [60, 91], [85, 176], [110, 312], [150, 529], [200, 846], [250, 1000]] ,
@@ -52,6 +55,12 @@ class Player():
 						[[0, 5], [25, 38], [50, 91], [75, 176], [87, 312], [100, 529], [112, 846], [125, 1000], [137, 1000], [132, 1000], [122, 1000]] ,
 						[[0, 38], [32, 91], [65, 176], [97, 312], [113, 529], [130, 846], [145, 1000], [162, 1000], [178, 1000], [171, 1000], [158, 1000]] 
 					]
+		if self.death == 1:
+			pygame.mixer.stop()
+			for head in self.deathSounds:
+				time.sleep(random.randint(0,4) / 100)
+				head.set_volume(random.randint(2,6) / 100)
+				head.play()
 		time.sleep(0.05)	# slow down animation. Should be locked to ticks!
 		if self.death < 12:
 			for head in range(6):

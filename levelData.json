@@ -4,28 +4,152 @@
 			"name" : "KajDrewsvej",
 			"levelNo" : 1,
 			"length" : 9000,
-			"objects" : [
-				[1500,  580, 10, 20, ["gfx/bil1.png", "gfx/bil2.png"]],
-				[2500,  580, 10, 20, ["gfx/bil1.png", "gfx/bil2.png"]],
-				[3000,  400, 20, 20, ["gfx/sword1.png", "gfx/sword2.png"]],
-				[3500,  580, 10, 20, ["gfx/bil1.png", "gfx/bil2.png"]],
-				[4000,  600, 15, 20, ["gfx/dog1.png", "gfx/dog2.png"]],
-				[4300,  400, 20, 20, ["gfx/sword1.png", "gfx/sword2.png"]],
-				[4800,  590, 5,  20, ["gfx/snail1.png", "gfx/snail2.png", "gfx/snail3.png"]],
-				[5000,  580, 10, 20, ["gfx/bil1.png", "gfx/bil2.png"]],
-				[5500,  580, 5,  20, ["gfx/snail1.png", "gfx/snail2.png"]],
-				[6500,  580, 10, 20, ["gfx/bil1.png", "gfx/bil2.png"]],
-				[7500,  580, 10, 20, ["gfx/bil1.png", "gfx/bil2.png"]],
-				[8000,  580, 15, 20, ["gfx/dog1.png", "gfx/dog2.png"]],
-				[8500,  310, 1,  20, ["gfx/aardvark1.png", "gfx/aardvark2.png"]],
-
-
-				[1000,  534, 0,  10, ["gfx/mushroomLower.png"], 0],
-				[945,   484, 0,  10, ["gfx/mushroomUpper.png"], 0],
-
-
-				[10210, 376, 0,  10, ["gfx/portal1.png", "gfx/portal2.png"]]
-			],
+			"objects" : {
+						"1":{
+							"xPos" : 1500,
+							"yPos" : 580,
+							"speed" : 10,
+							"priority" : 20,
+							"frames" : ["gfx/bil1.png", "gfx/bil2.png"],
+							"sound" : "sfx/bil.mp3",
+							"collisionType" : 1
+						},
+						"2":{
+							"xPos" : 2500,
+							"yPos" : 580,
+							"speed" : 10,
+							"priority" : 20,
+							"frames" : ["gfx/bil1.png", "gfx/bil2.png"],
+							"sound" : "sfx/bil.mp3",
+							"collisionType" : 1
+						},
+						"3":{
+							"xPos" : 3000,
+							"yPos" : 400,
+							"speed" : 20,
+							"priority" : 20,
+							"frames" : ["gfx/sword1.png", "gfx/sword2.png"],
+							"sound" : "sfx/sword.mp3",
+							"collisionType" : 1
+						},
+						"4":{
+							"xPos" : 3500,
+							"yPos" : 580,
+							"speed" : 10,
+							"priority" : 20,
+							"frames" : ["gfx/bil1.png", "gfx/bil2.png"],
+							"sound" : "sfx/bil.mp3",
+							"collisionType" : 1
+						},
+						"5":{
+							"xPos" : 4000,
+							"yPos" : 600,
+							"speed" : 15,
+							"priority" : 20,
+							"frames" : ["gfx/dog1.png", "gfx/dog2.png"],
+							"sound" : "sfx/dog.mp3",
+							"collisionType" : 1
+						},
+						"6":{
+							"xPos" : 4300,
+							"yPos" : 400,
+							"speed" : 20,
+							"priority" : 20,
+							"frames" : ["gfx/sword1.png", "gfx/sword2.png"],
+							"sound" : "sfx/sword.mp3",
+							"collisionType" : 1
+						},
+						"7":{
+							"xPos" : 4800,
+							"yPos" : 590,
+							"speed" : 5,
+							"priority" : 20,
+							"frames" : ["gfx/snail1.png", "gfx/snail2.png", "gfx/snail3.png"],
+							"sound" : "sfx/snail.mp3",
+							"collisionType" : 1
+						},
+						"8":{
+							"xPos" : 5000,
+							"yPos" : 580,
+							"speed" : 10,
+							"priority" : 20,
+							"frames" : ["gfx/bil1.png", "gfx/bil2.png"],
+							"sound" : "sfx/bil.mp3",
+							"collisionType" : 1
+						},
+						"9":{
+							"xPos" : 5500,
+							"yPos" : 590,
+							"speed" : 5,
+							"priority" : 20,
+							"frames" : ["gfx/snail1.png", "gfx/snail2.png", "gfx/snail3.png"],
+							"sound" : "sfx/snail.mp3",
+							"collisionType" : 1
+						},
+						"10":{
+							"xPos" : 6500,
+							"yPos" : 580,
+							"speed" : 10,
+							"priority" : 20,
+							"frames" : ["gfx/bil1.png", "gfx/bil2.png"],
+							"sound" : "sfx/bil.mp3",
+							"collisionType" : 1
+						},
+						"11":{
+							"xPos" : 7500,
+							"yPos" : 580,
+							"speed" : 10,
+							"priority" : 20,
+							"frames" : ["gfx/bil1.png", "gfx/bil2.png"],
+							"sound" : "sfx/bil.mp3",
+							"collisionType" : 1
+						},
+						"12":{
+							"xPos" : 8000,
+							"yPos" : 600,
+							"speed" : 15,
+							"priority" : 20,
+							"frames" : ["gfx/dog1.png", "gfx/dog2.png"],
+							"sound" : "sfx/dog.mp3",
+							"collisionType" : 1
+						},
+						"13":{
+							"xPos" : 9500,
+							"yPos" : 310,
+							"speed" : 2,
+							"priority" : 20,
+							"frames" : ["gfx/aardvark1.png", "gfx/aardvark2.png"],
+							"sound" : "sfx/aardvark.mp3",
+							"collisionType" : 1
+						},
+						"14":{
+							"xPos" : 1000,
+							"yPos" : 534,
+							"speed" : 0,
+							"priority" : 10,
+							"frames" : ["gfx/mushroomLower.png"],
+							"sound" : 0,
+							"collisionType" : 0
+						},
+						"15":{
+							"xPos" : 945,
+							"yPos" : 484,
+							"speed" : 0,
+							"priority" : 10,
+							"frames" : ["gfx/mushroomUpper.png"],
+							"sound" : 0,
+							"collisionType" : 0
+						},
+						"16":{
+							"xPos" : 10210,
+							"yPos" : 375,
+							"speed" : 0,
+							"priority" : 10,
+							"frames" : ["gfx/portal1.png", "gfx/portal2.png"],
+							"sound" : "sfx/portal.mp3",
+							"collisionType" : 0
+						}
+					},
 			"bgPath" : "gfx/level1backdrop.png",
 			"layerPath" : "gfx/level1layer.png",
 			"fgPath" : "gfx/pavement.png",
