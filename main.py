@@ -137,14 +137,28 @@ class Main():
 			return 0
 		xPosHead, yPosHead = self.player.getHeadCoord()
 		for obj in self.level.visibleObjects:
-			if obj.collisionType:
-				objXPos = self.width - (self.level.xPos + self.width - obj.xPos)		# calculate obj posistion on screen, obj.xPos is position on level
-				offset1 = (objXPos - self.player.xPos, obj.yPos - self.player.yPos)		# body
-				offset2 = (objXPos - xPosHead, obj.yPos - yPosHead)						# head
-				overlap1 = self.player.bodyMask.overlap(obj.mask, offset1)
-				overlap2 = self.player.headMask.overlap(obj.mask, offset2)
+			objXPos = self.width - (self.level.xPos + self.width - obj.xPos)		# calculate obj posistion on screen, obj.xPos is position on level
+			offset1 = (objXPos - self.player.xPos, obj.yPos - self.player.yPos)		# body
+			offset2 = (objXPos - xPosHead, obj.yPos - yPosHead)						# head
+			overlap1 = self.player.bodyMask.overlap(obj.mask, offset1)
+			overlap2 = self.player.headMask.overlap(obj.mask, offset2)
+			if obj.collisionType == 1:					# killing player
 				if overlap1 or overlap2:
 					self.player.death = 1
+			elif obj.collisionType == 2:				# blocking player
+				if overlap1 or overlap2:
+					print('blocking!')
+
+						# find sidste direction for spilelrens bevaegelse, og skub tilbage ift det
+
+
+#			    if self.player.bodyMask.overlap(obj.mask, offset1):
+#			    	print('blocking!')
+
+
+#			        player.blocked_dir = player.direction
+#			        player.push_backwards()
+
 		return 1
 
 
@@ -181,7 +195,9 @@ obj.run()
 
 
 # --- TODO ---------------------------------------------------------------------------------------
+# - BUG: objekter tegnes kun hvis deres 0,0 er paa skaermen
 # - bedre respons fra kontrol, især NED
+# - bedre timing, så spillet ikke kører hurtigere på hurtigere computere
 # - enemies move more advanced, eg jump, move back/forth, change speed
 # - vaaben/skud?
 # - death sound
